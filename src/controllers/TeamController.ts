@@ -15,11 +15,27 @@ const TeamController = {
     },
     async getAll(req:Request , res:Response ) {
         try {
-            const teams = await Team.find()
-            res.status(201).send({msg: "teams:", teams});
+            const teams = await Team.find().populate('players');
+            res.status(201).send({msg: "teams:", teams})
         } catch (error) {
             handleTypeError(error, req, res, () => {})
 
+        }
+    },
+    async getById(req: Request, res: Response): Promise<void> {
+        try {
+            const teamId = req.params.id; 
+            const team = await Team.findById(teamId).populate('players');
+    
+            if (!team) {
+                 res.status(404).send({ msg: "No team found with that ID" });
+            }
+    
+            res.status(200).send({ msg: "Team found", team });
+        } catch (error) {
+       
+            console.error('Error fetching team:', error);
+            res.status(500).send({ msg: 'Internal server error' });
         }
     },
     async getByName(req: Request, res: Response) {

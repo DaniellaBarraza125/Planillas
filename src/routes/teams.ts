@@ -7,6 +7,8 @@ router.post('/', TeamController.create)
 router.put('/:_id', TeamController.update)
 router.get('/', TeamController.getAll);
 router.get('/byname', TeamController.getByName);
+router.get('/:id', TeamController.getById);
+
 
 
 export   { router };

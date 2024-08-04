@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { handleTypeError } from "../utils/error.handle";
 import Tournament from "../models/Tournament";
+import Match from "../models/Matches";
 
 
 const TournamentController = {
@@ -45,6 +46,26 @@ const TournamentController = {
 
         }
     },
+    async delete(req:Request , res:Response ) {
+        try {
+
+        const tournament = await Tournament.findById(req.params._id).populate('matches');
+    
+        if (!tournament) {
+            return res.status(404).send({ msg: 'Tournament not found' });
+        }
+    
+        if (tournament.matches && tournament.matches.length > 0) {
+            await Match.deleteMany({ _id: { $in: tournament.matches } });
+        }
+    
+        await Tournament.findByIdAndDelete(req.params._id);
+    
+        res.status(200).send({ msg: 'Tournament deleted', tournament });
+        } catch (error) {
+        handleTypeError(error, req, res, () => {});
+        }
+    }
 
 };
 

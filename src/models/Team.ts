@@ -18,7 +18,7 @@ const teamSchema = new Schema<Team>(
         }],
         capitan: {
             type: String,
-            required: true,
+           
         },
         tournaments: [{
             type: Schema.Types.ObjectId,
